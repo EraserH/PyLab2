@@ -6,9 +6,9 @@ class Reader:
     def __init__(self, path):
         self.__path = path
 
-    def write_to_file(self, obj):
+    def load_from_file(self, obj):
         #lst = []
-        with open(self.path, 'w') as file:
+        with open(self.__path, 'r') as file:
             lst = json.load(file)
-            print("The object has loaded from the file!")
+            print("The object has been loaded from the file!")
         return lst
