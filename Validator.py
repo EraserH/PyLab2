@@ -1,9 +1,43 @@
 import re
-
+from tqdm import tqdm
 
 class Validator:
+    '''
+      Объект класса Validator репрезентует валидатор.
 
+      Он нужен для того, чтобы выполнять валидацию:
+      записать из предоставленного списка валидные записи в один список, невалидные в другой,
+      а статистику невалидных полей в специальный словарь.
+
+      Непосредственно валидация производится через метод self.validate с помощью паттернов regex,
+      которые записаны в соответствующих методах, например __check_telephone
+
+      Attributes
+      ----------
+        self.__data : list
+            Изначальный список, который анализируется методом класса
+
+        self.__invalid_university : list
+            Вспомогательный список для проверки regexp
+        self.__invalid_address : list
+            Вспомогательный список для проверки regexp
+
+        self.__valid_data : list
+            Список валидных словарей
+        self.__non_valid_data : list
+            Список невалидных словарей
+        self.__non_valid_dictionary : dict
+            Словарь для статистики невалидных данных по полям
+      '''
     def __init__(self, lst):
+        '''
+            Инициализирует экземпляр класса Validator.
+
+            Parameters
+            ----------
+              lst : list
+                Список словарей, которые нужно проанализировать
+            '''
         self.__data = lst
 
         self.__invalid_university = []
@@ -22,13 +56,6 @@ class Validator:
             "worldview": 0,
             "address": 0
         }
-
-    def __convert_to_str(self, dct):
-        print("метод convert: ", type(dct))
-        for field in dct.values():
-            field = str(field)
-        print(dct)
-        return dict(dct)
 
     def __check_telephone(self, val): # готово
         val = str(val)
@@ -91,46 +118,56 @@ class Validator:
 
 
     def validate(self):
-        for dct in self.__data:
-            # print("метод validate: ", type(dct))
-            # print(dct)
-            # dct = self.__convert_to_str(dct)
-            is_valid = True
+        '''выполняет разбор списка словарей на валидность данных.
+        Если все поля словаря соответствуют регулярным выражениям из функций проверок,
+        функция добавляет этот словарь к списку валидных данных self.__valid_data
+        Если есть хотя бы одно несоответствие, словарь добавляется к списку невалидных данных
+        self.__non_valid_data
 
-            if not self.__check_telephone(dct["telephone"]):
-                self.non_valid_dictionary["telephone"] += 1
-                is_valid = False
-            if not self.__check_height(dct["height"]):
-                self.non_valid_dictionary["height"] += 1
-                is_valid = False
-            if not self.__check_inn(dct["inn"]):
-                self.non_valid_dictionary["inn"] += 1
-                is_valid = False
-            if not self.__check_passport_series(dct["passport_series"]):
-                self.non_valid_dictionary["passport_series"] += 1
-                is_valid = False
-            if not self.__check_university(dct["university"]):
-                self.non_valid_dictionary["university"] += 1
-                self.__invalid_university.append(dct["university"])
-                is_valid = False
-            if not self.__check_work_experience(dct["work_experience"]):
-                self.non_valid_dictionary["work_experience"] += 1
-                is_valid = False
-            if not self.__check_academic_degree(dct["academic_degree"]):
-                self.non_valid_dictionary["academic_degree"] += 1
-                is_valid = False
-            if not self.__check_worldview(dct["worldview"]):
-                self.non_valid_dictionary["worldview"] += 1
-                is_valid = False
-            if not self.__check_address(dct["address"]):
-                self.non_valid_dictionary["address"] += 1
-                self.__invalid_address.append(dct["address"])
-                is_valid = False
+    Parameters
+    ----------
+      self : Validator
+        это метод объекта класса Validator
+    '''
+        with tqdm(total=100) as progressbar:
+            for dct in self.__data:
+                progressbar.update(1)
+                is_valid = True
 
-            if is_valid:
-                self.__valid_data.append(dct)
-            else:
-                self.__non_valid_data.append(dct)
+                if not self.__check_telephone(dct["telephone"]):
+                    self.non_valid_dictionary["telephone"] += 1
+                    is_valid = False
+                if not self.__check_height(dct["height"]):
+                    self.non_valid_dictionary["height"] += 1
+                    is_valid = False
+                if not self.__check_inn(dct["inn"]):
+                    self.non_valid_dictionary["inn"] += 1
+                    is_valid = False
+                if not self.__check_passport_series(dct["passport_series"]):
+                    self.non_valid_dictionary["passport_series"] += 1
+                    is_valid = False
+                if not self.__check_university(dct["university"]):
+                    self.non_valid_dictionary["university"] += 1
+                    self.__invalid_university.append(dct["university"])
+                    is_valid = False
+                if not self.__check_work_experience(dct["work_experience"]):
+                    self.non_valid_dictionary["work_experience"] += 1
+                    is_valid = False
+                if not self.__check_academic_degree(dct["academic_degree"]):
+                    self.non_valid_dictionary["academic_degree"] += 1
+                    is_valid = False
+                if not self.__check_worldview(dct["worldview"]):
+                    self.non_valid_dictionary["worldview"] += 1
+                    is_valid = False
+                if not self.__check_address(dct["address"]):
+                    self.non_valid_dictionary["address"] += 1
+                    self.__invalid_address.append(dct["address"])
+                    is_valid = False
+
+                if is_valid:
+                    self.__valid_data.append(dct)
+                else:
+                    self.__non_valid_data.append(dct)
 
     @property
     def non_valid_dictionary(self):
