@@ -6,6 +6,9 @@ class Validator:
     def __init__(self, lst):
         self.__data = lst
 
+        self.__invalid_university = []
+        self.__invalid_address = []
+
         self.__valid_data = []
         self.__non_valid_data = []
         self.__non_valid_dictionary = { # это можно сделать генератором!
@@ -55,7 +58,9 @@ class Validator:
 
     def __check_university(self, val): #
         val = str(val)
-        if re.fullmatch(r'[-\sа-яА-Я\.]+', val) != None:
+        # if re.fullmatch(r'[-\sа-яА-Я\.]+', val) != None:
+        pattern = r'([Уу]ниверситет|[Аа]кадеми[яи]|[Пп]олитехнический|[И|и]нститут|им.|[А-Я]{3,}|РФ|СП[Бб]ГУ|[Пп]олитех|[Ии]сследовательский)'
+        if re.search(pattern, val) != None:
             return True
         return False
 
@@ -79,7 +84,7 @@ class Validator:
 
     def __check_address(self, val):
         val = str(val)
-        if re.fullmatch(r'[-а-яА-Я0-9\s\.]+', val) != None:
+        if re.fullmatch(r'[-а-яА-Я0-9)(\s\.]+\s[0-9]{1,5}', val) != None:
             return True
         return False
 
@@ -106,6 +111,7 @@ class Validator:
                 is_valid = False
             if not self.__check_university(dct["university"]):
                 self.non_valid_dictionary["university"] += 1
+                self.__invalid_university.append(dct["university"])
                 is_valid = False
             if not self.__check_work_experience(dct["work_experience"]):
                 self.non_valid_dictionary["work_experience"] += 1
@@ -118,6 +124,7 @@ class Validator:
                 is_valid = False
             if not self.__check_address(dct["address"]):
                 self.non_valid_dictionary["address"] += 1
+                self.__invalid_address.append(dct["address"])
                 is_valid = False
 
             if is_valid:
@@ -136,6 +143,14 @@ class Validator:
     @property
     def valid_data(self):
         return self.__valid_data
+
+    @property
+    def invalid_university(self):
+        return self.__invalid_university
+
+    @property
+    def invalid_address(self):
+        return self.__invalid_address
 
 
 
