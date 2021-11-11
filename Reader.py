@@ -6,7 +6,7 @@ class Reader:
     def __init__(self, path):
         self.__path = path
 
-    def load_from_file(self, obj):
+    def load_from_file(self):
         #lst = []
         with open(self.__path, 'r') as file:
             lst = json.load(file)
