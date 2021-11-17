@@ -71,6 +71,16 @@ print('     '.join(fields))
 
 heapSort(lst, 'height')
 
-print()
+'''print()
 for i in range(100000):
-    print(lst[i])
+    print(lst[i])'''
+
+write_sorted = Writer(sorted_path)
+write_sorted.write_to_file(lst)
+
+read_valid = Reader(sorted_path)
+lst_2 = read_valid.load_from_file()
+
+print()
+for i in range(50000):
+    print(lst_2[i])
