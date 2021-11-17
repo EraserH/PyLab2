@@ -1,5 +1,3 @@
-import json
-import re
 from Validator import Validator
 from Writer import Writer
 from Reader import Reader
@@ -25,6 +23,7 @@ valid_data_path = pars.output
 it_reads = Reader(path)
 it_writes_valid = Writer(valid_data_path)
 # it_writes_invalid = Writer(invalid_data_path)
+it_reads_valid = Reader(valid_data_path) # чтение валидных записей из файла
 
 lst = it_reads.load_from_file()
 
@@ -46,7 +45,7 @@ it_writes_valid.write_to_file(it_validates.valid_data)
 
 
 def how_much_dictionaries():
-    lst = it_reads.load_from_file()
+    lst = it_reads_valid.load_from_file()
     i = 0
     for dct in lst:
         i += 1
@@ -54,4 +53,4 @@ def how_much_dictionaries():
     print(f"Здесь {i} словарей")
 
 
-# how_much_dictionaries()
+how_much_dictionaries()
