@@ -1,5 +1,6 @@
 import json
 
+
 class Reader:
     '''
         Объект класса Reader репрезентует чтение из файла с помощью модуля json.

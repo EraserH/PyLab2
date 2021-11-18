@@ -1,18 +1,18 @@
-from Validator import Validator
-from Writer import Writer
-from Reader import Reader
+from .Validator import Validator
+from .Writer import Writer
+from .Reader import Reader
 import argparse
 
 parser = argparse.ArgumentParser("Input & output parser")
 parser.add_argument(
     "-input",
     type=str,
-    default="40.txt",
+    default="../40.txt",
     help="Input path")
 parser.add_argument(
     "-output",
     type=str,
-    default="valid.txt",
+    default="../valid.txt",
     help="Output path")
 pars = parser.parse_args()
 
